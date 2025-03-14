@@ -93,12 +93,114 @@
         </div>
     </div>
 
+    <!-- Modal Background -->
+    <div id="projectPopUp" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg w-96 p-6">
+            <h2 class="text-lg font-semibold mb-4">Project Details</h2>
+            <div id="popUpContent">
+                <div class="mt-4">
+                    <form id="ProjectFormPupUpModal" onsubmit="simpanProject('ProjectFormPupUpModal')" enctype="multipart/form-data">
+                        <table class="table-no-border">
+                            <input type="hidden" id="project_id" name="id" />
+                            <tr class="align-baseline">
+                                <td>
+                                    <label for="project_name" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Nama Project
+                                    </label>
+                                </td>
+                                <td>:</td>
+                                <td>
+                                    <input type="text" id="project_name" name="project_name" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required />
+                                </td>
+                            </tr>
+                            <tr class="align-baseline">
+                                <td>
+                                    <label for="leader_photo" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Leader Photo
+                                    </label>
+                                </td>
+                                <td>:</td>
+                                <td>
+                                    <input type="file" id="leader_photo" name="leader_photo" class="w-full p-2 border rounded-md" accept="image/*" />
+                                    <input type="hidden" id="old_leader_photo" name="old_leader_photo" />
+                                </td>
+                            </tr>
+                            <tr class="align-baseline">
+                                <td>
+                                    <label for="project_lead" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Project Leader
+                                    </label>
+                                </td>
+                                <td>:</td>
+                                <td>
+                                    <input type="text" id="project_lead" name="project_lead" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm text-capitalize-input" required />
+                                </td>
+                            </tr>
+                            <tr class="align-baseline">
+                                <td>
+                                    <label for="client_name" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Client
+                                    </label>
+                                </td>
+                                <td>:</td>
+                                <td>
+                                    <input type="text" id="client_name" name="client_name" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required />
+                                </td>
+                            </tr>
+                            <tr class="align-baseline">
+                                <td>
+                                    <label for="project_progress" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Project Progress
+                                    </label>
+                                </td>
+                                <td>:</td>
+                                <td>
+                                    <div class="flex items-baseline" x-data="{ value_project_progress: 50 }">
+                                        <input id="project_progress" name="project_progress" type="range" id="slider" x-model="value_project_progress" min="0" max="100" class="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer accent-blue-600" required />
+                                        <div class="text-center font-semibold text-blue-600"><span x-text="value_project_progress" id="value_project_progress"></span>%</div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="align-baseline">
+                                <td>
+                                    <label for="start_date" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Start
+                                    </label>
+                                </td>
+                                <td>:</td>
+                                <td>
+                                    <input type="text" id="start_date" name="start_date" class="datepicker border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm cursor-pointer" required readonly />
+                                </td>
+                            </tr>
+                            <tr class="align-baseline">
+                                <td>
+                                    <label for="end_date" class="block text-sm font-medium text-gray-700 mb-2">
+                                        End
+                                    </label>
+                                </td>
+                                <td>:</td>
+                                <td>
+                                    <input type="text" id="end_date" name="end_date" class="datepicker border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm cursor-pointer" required readonly />
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="flex items-center justify-end mt-4 gap-10">
+                            <button type="submit" class="hideBtnProcess inline-flex items-center px-4 py-2 bg-success border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-success focus:bg-success active:bg-success focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 cursor-pointer" onclick="${$btnFormFunc[0]}">Simpan</button>
+                            <button type="reset" class="hideBtnProcess inline-flex items-center px-4 py-2 bg-danger border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-danger focus:bg-danger active:bg-danger focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 cursor-pointer ms-3" onclick="${$btnFormFunc[1]}">Reset</button>
+                            <button type="button" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150 cursor-pointer" onclick="popUpModalExecAction('close')">Tutup</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         $(document).ready(async function() {
             (async function() {
                 const $modalSlotContent = `
                 <div class="mt-4">
-                    <form id="ProjectForm" onsubmit="simpanProject(this)" enctype="multipart/form-data">
+                    <form id="ProjectForm" onsubmit="simpanProject('ProjectForm')" enctype="multipart/form-data">
                         <table class="table-no-border">
                             <tr class="align-baseline">
                                 <td>
@@ -224,8 +326,6 @@
                     $("#end_date").val("");
                 }
             });
-
-            execFormProject();
             // Functions event onclick end
         });
 
@@ -264,8 +364,8 @@
                 searchable: false,
                 render: (data) =>
                     `<div class='flex gap-1 justify-center'>
-                        <button class='inline-flex items-center px-4 py-2 bg-warning border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-warning focus:bg-warning active:bg-warning focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150' data-id='${data.id}'>Edit</button>
-                        <button class='inline-flex items-center px-4 py-2 bg-danger border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-danger focus:bg-danger active:bg-danger focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150' data-id='${data.id}'>Hapus</button>
+                        <button class='inline-flex items-center px-4 py-2 bg-warning border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-warning focus:bg-warning active:bg-warning focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150' onclick="popUpModalExecAction('edit', '${data.id}')">Edit</button>
+                        <button class='inline-flex items-center px-4 py-2 bg-danger border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-danger focus:bg-danger active:bg-danger focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150' onclick="popUpModalExecAction('delete', '${data.id}')">Hapus</button>
                     </div>` // Template class btn ada di file CustomizeBtnLayout.blade.php
             });
 
@@ -325,7 +425,7 @@
             }
         }
 
-        async function simpanProject() {
+        async function simpanProject($formID) {
             event.preventDefault();
 
             Swal.fire({
@@ -344,12 +444,17 @@
                     $(".hideBtnProcess").hide();
                     toastr.warning("Sedang diproses, mohon tunggu!", "Peringatan!");
 
-                    let formElement = document.getElementById("ProjectForm");
+                    let formElement = document.getElementById($formID);
                     let formDatas = new FormData(formElement);
 
+                    const $id_data = $("#ProjectFormPupUpModal #project_id").val();
+                    const $method = $id_data ? "PUT" : "POST";
+                    const $url = $id_data ? `${$base_url}/api/projects/${$id_data}` : `${$base_url}/api/projects`;
+                    console.log($id_data);
+
                     $.ajax({
-                        url: `${$base_url}/api/projects`,
-                        type: "POST",
+                        url: `${$url}`,
+                        type: $method,
                         data: formDatas,
                         processData: false,
                         contentType: false,
@@ -407,6 +512,151 @@
             }
             if ($exec == "reset") {
                 $("#btnReset").click();
+            }
+        }
+
+        function fillFormData(data) {
+            $("#ProjectFormPupUpModal input, #ProjectFormPupUpModal select, #ProjectFormPupUpModal textarea").each(function () {
+                let name = $(this).attr("name");
+                if (name === "leader_photo") {
+                    if (data[name]) {
+                        $("#old_leader_photo").val(data[name]);
+                    }
+                } else {
+                    if (data[name] !== undefined) {
+                        $(this).val(data[name]);
+
+                        if ($(this).attr("name") == "project_progress") {
+                            $("#value_project_progress").html(data[name]);
+                        }
+                    }
+                }
+            });
+        }
+
+        async function popUpModalExecAction($action, $id = null) {
+            if ($action == "close") {
+                $("#projectPopUp").addClass("hidden");
+            }
+            if ($action == "edit") {
+                $.ajax({
+                    url: `${$base_url}/api/projects/${$id}`,
+                    type: "GET",
+                    processData: false,
+                    contentType: false,
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(callback) {
+                        const { message, datas } = callback;
+                        console.dir('success', callback);
+                        toastr.success(message, "Success!");
+
+                        fillFormData(datas);
+
+                        $("#loadingAjax").hide();
+                        $(".hideBtnProcess").show();
+
+                        $("#projectPopUp").removeClass("hidden");
+                    },
+                    error: function(callback) {
+                        const { responseJSON } = callback;
+                        const { errors, message, messages, datas } = responseJSON;
+                        let errorInfo, validator;
+                        if (datas) {
+                            const { errorInfo: errInfo, validator: validCallback } = datas
+                            errorInfo = errInfo;
+                            validator = validCallback;
+                        }
+                        console.dir('error', callback);
+
+                        const $tmpErrLoop = datas || errors;
+                        if ($tmpErrLoop) {
+                            for (let key in $tmpErrLoop) {
+                                AllNotify($tmpErrLoop[key][0], "error");
+                                $(`#err_${key}`).show();
+                            }
+                        } else if (message || messages || errorInfo || validator) {
+                            const $txtMsgAlert = (validator ? "input data tidak sesuai atau tidak boleh kosong" : ( errorInfo ? errorInfo[2] : (messages ? messages : message)));
+                            AllNotify($txtMsgAlert, "error");
+                        }
+
+                        $("#loadingAjax").hide();
+                        $(".hideBtnProcess").show();
+                    },
+                });
+            }
+            if ($action == "delete") {
+                Swal.fire({
+                    title: "Apakah yakin ingin menghapus data?",
+                    icon: "danger",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    cancelButtonText: "Batal",
+                    confirmButtonText: "Lanjutkan"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $(".csrf-token").val($('meta[name="csrf-token"]').attr('content'));
+
+                        $("#loadingAjax").show();
+                        $(".hideBtnProcess").hide();
+                        toastr.warning("Sedang diproses, mohon tunggu!", "Peringatan!");
+
+                        $.ajax({
+                            url: `${$base_url}/api/projects/${$id}`,
+                            type: "DELETE",
+                            processData: false,
+                            contentType: false,
+                            xhrFields: {
+                                withCredentials: true
+                            },
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            success: function(callback) {
+                                const { message } = callback;
+                                console.dir('success', callback);
+                                toastr.success(message, "Success!");
+
+                                $("#loadingAjax").hide();
+                                $(".hideBtnProcess").show();
+
+                                if ($.fn.DataTable.isDataTable(`#projectTable`)) {
+                                    $(`#projectTable`).DataTable().ajax.reload();
+                                }
+                            },
+                            error: function(callback) {
+                                const { responseJSON } = callback;
+                                const { errors, message, messages, datas } = responseJSON;
+                                let errorInfo, validator;
+                                if (datas) {
+                                    const { errorInfo: errInfo, validator: validCallback } = datas
+                                    errorInfo = errInfo;
+                                    validator = validCallback;
+                                }
+                                console.dir('error', callback);
+
+                                const $tmpErrLoop = datas || errors;
+                                if ($tmpErrLoop) {
+                                    for (let key in $tmpErrLoop) {
+                                        AllNotify($tmpErrLoop[key][0], "error");
+                                        $(`#err_${key}`).show();
+                                    }
+                                } else if (message || messages || errorInfo || validator) {
+                                    const $txtMsgAlert = (validator ? "input data tidak sesuai atau tidak boleh kosong" : ( errorInfo ? errorInfo[2] : (messages ? messages : message)));
+                                    AllNotify($txtMsgAlert, "error");
+                                }
+
+                                $("#loadingAjax").hide();
+                                $(".hideBtnProcess").show();
+                            },
+                        });
+                    }
+                });
             }
         }
         // Functions event onclick end

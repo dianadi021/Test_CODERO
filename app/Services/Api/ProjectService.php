@@ -62,7 +62,7 @@ class ProjectService
 
                 $validate['leader_photo'] = "$path/$fileName";
             } else {
-                $validate['leader_photo'] = null;
+                $validate['leader_photo'] = (isset($req->old_leader_photo) ? $req->old_leader_photo : null);
             }
 
             $project = Project::create([
@@ -90,7 +90,7 @@ class ProjectService
         return Project::find($id);
     }
 
-    public function update(Request $req, string $id)
+    public function edit(Request $req, string $id)
     {
         try {
             $validate = $this->ReqValidation($req, $this->checkForm);

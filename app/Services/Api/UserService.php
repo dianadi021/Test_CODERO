@@ -120,7 +120,7 @@ class UserService
             ->find($id);
     }
 
-    public function update(Request $req, string $id)
+    public function edit(Request $req, string $id)
     {
         try {
             $validate = $this->ReqValidation($req, $this->checkForm);

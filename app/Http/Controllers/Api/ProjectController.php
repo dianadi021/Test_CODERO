@@ -30,9 +30,9 @@ class ProjectController extends ApiController
 
     public function show(string $id) { return $this->GetByID($id); }
 
-    public function update(Request $req, string $id): JsonResponse
+    public function edit(Request $req, string $id): JsonResponse
     {
-        return $this->service->update($req, $id);
+        return $this->service->edit($req, $id);
     }
 
     public function destroy(string $id) { return $this->DeleteByID($id); }
