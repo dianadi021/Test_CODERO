@@ -3,15 +3,10 @@
 namespace App\Services\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rules;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
 
 use App\Traits\Tools;
 use App\Traits\ResponseCode;
-
-use App\Http\Requests\Api\UserRequest;
 
 class SearchService
 {

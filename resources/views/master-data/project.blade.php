@@ -233,7 +233,29 @@
             const $coloumnsArray = [{ data: null, render: (data, type, row, meta) => meta.row + 1 }];
 
             if ($target == 'project') {
-                $coloumnsArray.push({ data: 'project_name' }, { data: 'client_name' }, { data: 'project_lead' }, { data: 'project_progress' }, { data: 'start_date' }, { data: 'end_date' });
+                $coloumnsArray.push({ data: 'project_name' }, { data: 'client_name' },
+                {
+                    data: null,
+                    render: function (data, type, row) {
+                        return `
+                            <div class="flex items-center space-x-3">
+                                <img src="${$base_url}/${row.leader_photo}" class="w-10 h-10 rounded-full border border-gray-300">
+                                <span>${row.project_lead}</span>
+                            </div>
+                        `;
+                    }
+                }, { data: 'start_date' }, { data: 'end_date' },
+                {
+                    data: 'project_progress',
+                    render: function(data, type, row) {
+                        return `
+                            <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+                                <div class="bg-blue-500 h-4 rounded-full transition-all" style="width: ${data}%;"></div>
+                            </div>
+                            <span class="text-sm font-semibold">${data}%</span>
+                        `;
+                    }
+                });
             }
 
             $coloumnsArray.push({
@@ -344,6 +366,10 @@
 
                             $("#loadingAjax").hide();
                             $(".hideBtnProcess").show();
+
+                            if ($.fn.DataTable.isDataTable(`#projectTable`)) {
+                                $(`#projectTable`).DataTable().ajax.reload();
+                            }
                         },
                         error: function(callback) {
                             const { responseJSON } = callback;

@@ -50,8 +50,17 @@ class ProjectService
             $validate = $this->ReqValidation($req, $this->checkForm);
 
             if ($req->hasFile('leader_photo')) {
-                $path = $req->file('leader_photo')->store('profiles', 'public');
-                $validate['leader_photo'] = "storage/" . $path;
+                $leaderPhoto = $req->file('leader_photo');
+                $path = 'storage/uploads/images/profiles';
+
+                if (!file_exists(public_path($path))) {
+                    mkdir(public_path($path), 0777, true);
+                }
+
+                $fileName = time() . '.' . $leaderPhoto->getClientOriginalExtension();
+                $leaderPhoto->move(public_path($path), $fileName);
+
+                $validate['leader_photo'] = "$path/$fileName";
             } else {
                 $validate['leader_photo'] = null;
             }
