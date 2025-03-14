@@ -17,24 +17,19 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd pdo pdo_pgsql zip bcmath sockets \
     && pecl install redis \
-    && docker-php-ext-enable redis
+    && docker-php-ext-enable redis \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install Composer (Versi terbaru)
 COPY --from=composer:2.8 /usr/bin/composer /usr/bin/composer
 
-# Install Node.js dan npm untuk TailwindCSS & assets compilation
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
-    && apt-get install -y nodejs
+# Copy application code (dengan pengecualian file yang tidak perlu)
+COPY . /var/www/html
 
-# Copy custom PHP configuration (Jika ada)
-# COPY ./docker/php.ini /usr/local/etc/php/php.ini
-
-# Copy application code
-COPY ./ /var/www/html
-
-# Set permissions for Laravel
+# Set permissions for Laravel (lebih rapi dan efisien)
 RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html/storage /var/www/html/bootstrap/cache
+    && chmod -R 775 storage bootstrap/cache \
+    && chmod -R 777 public
 
 # Expose port
 EXPOSE 9000

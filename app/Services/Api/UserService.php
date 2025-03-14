@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rules;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 use App\Traits\Tools;
 use App\Traits\ResponseCode;
@@ -105,10 +106,10 @@ class UserService
                 return $this->OKE($validate, "Data berhasil disimpan");
             } else {
                 DB::rollBack();
-                throw new Error("$validate");
+                throw new ValidationException($validate);
             }
-        } catch (Error $err) {
-            return $this->SERVER_ERROR($err->getMessage());
+        } catch (ValidationException $err) {
+            return $this->SERVER_ERROR($err->errors());
         }
     }
 
@@ -120,7 +121,7 @@ class UserService
             ->find($id);
     }
 
-    public function update(Request $req, string $id)
+    public function edit(Request $req, string $id)
     {
         try {
             $validate = $this->ReqValidation($req, $this->checkForm);
@@ -162,10 +163,10 @@ class UserService
                 return $this->OKE($validate, "Data berhasil disimpan");
             } else {
                 DB::rollBack();
-                throw new Error("$validate");
+                throw new ValidationException($validate);
             }
-        } catch (Error $err) {
-            return $this->SERVER_ERROR($err->getMessage());
+        } catch (ValidationException $err) {
+            return $this->SERVER_ERROR($err->errors());
         }
     }
 

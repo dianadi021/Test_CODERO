@@ -77,6 +77,6 @@ Trait Tools
     }
 
     public function ReqValidation($req, $form) {
-        $req->validate($form);
+        return $req->validate($form);
     }
 }
