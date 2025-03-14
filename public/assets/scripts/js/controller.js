@@ -413,11 +413,21 @@ function OpenLink($link, $options = ["self", "new", "popup"]) {
     }
 }
 
+function AlpinePopUpModal($action) {
+    if ($action == "open") {
+        $(".modal_section").show();
+    }
+
+    if ($action == "close") {
+        $(".modal_section").hide();
+    }
+}
+
 function CreatePopUpModal($idContainer, $valModal, $formID, $btnFormFunc, $slot, $btnTxt = ["Open Modal", "Simpan", "Reset", "Tutup"], $headContent = [], $footerContent = [], $ifSectionShow = { btn: true, funcBtnOpen: null }) {
 
     const { btn: $isBtnSection, funcBtnOpen } = $ifSectionShow;
     const $txtFuncBtnOpen = (IsValidVal(funcBtnOpen) ? `onclick="${funcBtnOpen}"` : "");
-    const $htmlBtnOpen = `<span class="cursor-pointer inline-flex items-center px-4 py-2 bg-info border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-info focus:bg-info active:bg-info focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150" @click="${$valModal} = true" ${$txtFuncBtnOpen}>${$btnTxt[0]}</span>`;
+    const $htmlBtnOpen = `<span class="cursor-pointer inline-flex items-center px-4 py-2 bg-info border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-info focus:bg-info active:bg-info focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150" @click="${$valModal} = true" ${$txtFuncBtnOpen} onclick="AlpinePopUpModal('open')">${$btnTxt[0]}</span>`;
     let $htmlBtnSubmit = "";
     let $htmlBtnReset = "";
     let $htmlBtnClose = "";
@@ -425,7 +435,7 @@ function CreatePopUpModal($idContainer, $valModal, $formID, $btnFormFunc, $slot,
     if ($isBtnSection) {
         $htmlBtnSubmit = `<span type="submit" class="hideBtnProcess inline-flex items-center px-4 py-2 bg-success border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-success focus:bg-success active:bg-success focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 cursor-pointer" onclick="${$btnFormFunc[0]}">${$btnTxt[1]}</span>`;
         $htmlBtnReset = `<span type="reset" class="hideBtnProcess inline-flex items-center px-4 py-2 bg-danger border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-danger focus:bg-danger active:bg-danger focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 cursor-pointer ms-3" onclick="${$btnFormFunc[1]}">${$btnTxt[2]}</span>`;
-        $htmlBtnClose = `<span class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150 cursor-pointer" @click="${$valModal} = false">${$btnTxt[3]}</span>`;
+        $htmlBtnClose = `<span type="button" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150 cursor-pointer" @click="${$valModal} = false" onclick="AlpinePopUpModal('close')">${$btnTxt[3]}</span>`;
     }
 
     const $htmlTxtHead = (IsValidVal($headContent, "bool", null, 0) ? `<h2 class="text-lg font-bold">${$headContent[0]}</h2>` : "");
@@ -454,7 +464,7 @@ function CreatePopUpModal($idContainer, $valModal, $formID, $btnFormFunc, $slot,
     const html = `
     ${$htmlBtnOpen}
 
-    <div class="modal_section">
+    <div class="modal_section" style="display: none;">
         <div
             x-show="${$valModal}"
             class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4"
@@ -469,7 +479,7 @@ function CreatePopUpModal($idContainer, $valModal, $formID, $btnFormFunc, $slot,
             <div class="bg-white w-full max-w-7xl mx-auto rounded-lg shadow-lg p-6 max-h-[80vh] overflow-y-auto" @click.away="${$valModal} = false" @keydown.escape.window="${$valModal} = false">
                 <div class="flex justify-between items-center border-b pb-3">
                     ${$htmlTxtHead}
-                    <span class="modal_section_close_btn" @click="${$valModal} = false" class="text-gray-500 hover:text-gray-700 text-xl cursor-pointer">
+                    <span class="modal_section_close_btn" @click="${$valModal} = false" class="text-gray-500 hover:text-gray-700 text-xl cursor-pointer" onclick="AlpinePopUpModal('close')">
                         &times;
                     </span>
                 </div>

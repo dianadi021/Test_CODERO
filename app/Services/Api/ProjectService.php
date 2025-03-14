@@ -90,16 +90,26 @@ class ProjectService
         return Project::find($id);
     }
 
-    public function edit(Request $req, string $id)
+    public function update(Request $req, string $id)
     {
         try {
             $validate = $this->ReqValidation($req, $this->checkForm);
 
             if ($req->hasFile('leader_photo')) {
-                $validated['leader_photo'] = $req->file('leader_photo')->store('profiles', 'public');
-            }
+                $leaderPhoto = $req->file('leader_photo');
+                $path = 'storage/uploads/images/profiles';
 
-            $validate['leader_photo'] = (isset($validate['leader_photo']) ? asset("storage/" . $validated['leader_photo']) : null);
+                if (!file_exists(public_path($path))) {
+                    mkdir(public_path($path), 0777, true);
+                }
+
+                $fileName = time() . '.' . $leaderPhoto->getClientOriginalExtension();
+                $leaderPhoto->move(public_path($path), $fileName);
+
+                $validate['leader_photo'] = "$path/$fileName";
+            } else {
+                $validate['leader_photo'] = (isset($req->old_leader_photo) ? $req->old_leader_photo : null);
+            }
 
             $project = Project::find($id);
 
@@ -127,7 +137,7 @@ class ProjectService
 
     public function destroy(string $id)
     {
-        $user = Project::find($id);
-        return $user->delete();
+        $project = Project::find($id);
+        return $project->delete();
     }
 }

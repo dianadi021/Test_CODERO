@@ -33,17 +33,6 @@
                                                 </select>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td>
-                                                <label class="block text-sm font-medium text-gray-700 mb-2"></label>
-                                                    Kata Kunci
-                                                </label>
-                                            </td>
-                                            <td>:</td>
-                                            <td>
-                                                <div></div>
-                                            </td>
-                                        </tr>
                                     </table>
 
                                     <x-btn-customize-layout type="button" id="btnSearch" section="success" class="ms-4" onclick="search('submit')">
@@ -59,7 +48,7 @@
                     </fieldset>
                 </div>
 
-                <div id="Project_container" x-cloak x-data="{ ProjectModal: false }" @click.outside="ProjectModal = false" @close.stop="ProjectModal = false"></div>
+                <button type="button" class="cursor-pointer inline-flex items-center px-4 py-2 bg-info border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-info focus:bg-info active:bg-info focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150" onclick="popUpModalExecAction('add')">Tambah Data</button>
 
                 <div class="mt-6 overflow-x-auto">
                     <div class="tabs">
@@ -94,14 +83,14 @@
     </div>
 
     <!-- Modal Background -->
-    <div id="projectPopUp" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+    <div id="projectPopUp" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" style="display: none;">
         <div class="bg-white rounded-lg shadow-lg w-96 p-6">
             <h2 class="text-lg font-semibold mb-4">Project Details</h2>
             <div id="popUpContent">
                 <div class="mt-4">
+                    <input type="hidden" id="project_id" name="id" />
                     <form id="ProjectFormPupUpModal" onsubmit="simpanProject('ProjectFormPupUpModal')" enctype="multipart/form-data">
                         <table class="table-no-border">
-                            <input type="hidden" id="project_id" name="id" />
                             <tr class="align-baseline">
                                 <td>
                                     <label for="project_name" class="block text-sm font-medium text-gray-700 mb-2">
@@ -185,8 +174,8 @@
                             </tr>
                         </table>
                         <div class="flex items-center justify-end mt-4 gap-10">
-                            <button type="submit" class="hideBtnProcess inline-flex items-center px-4 py-2 bg-success border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-success focus:bg-success active:bg-success focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 cursor-pointer" onclick="${$btnFormFunc[0]}">Simpan</button>
-                            <button type="reset" class="hideBtnProcess inline-flex items-center px-4 py-2 bg-danger border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-danger focus:bg-danger active:bg-danger focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 cursor-pointer ms-3" onclick="${$btnFormFunc[1]}">Reset</button>
+                            <button type="submit" class="hideBtnProcess inline-flex items-center px-4 py-2 bg-success border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-success focus:bg-success active:bg-success focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 cursor-pointer">Simpan</button>
+                            <button type="reset" class="hideBtnProcess inline-flex items-center px-4 py-2 bg-danger border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-danger focus:bg-danger active:bg-danger focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 cursor-pointer ms-3">Reset</button>
                             <button type="button" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150 cursor-pointer" onclick="popUpModalExecAction('close')">Tutup</button>
                         </div>
                     </form>
@@ -430,7 +419,7 @@
 
             Swal.fire({
                 title: "Apakah yakin ingin melanjutkan?",
-                icon: "warning",
+                icon: "question",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
                 cancelButtonColor: "#d33",
@@ -444,18 +433,23 @@
                     $(".hideBtnProcess").hide();
                     toastr.warning("Sedang diproses, mohon tunggu!", "Peringatan!");
 
-                    let formElement = document.getElementById($formID);
-                    let formDatas = new FormData(formElement);
+                    let formData = document.getElementById($formID);
+                    formData = new FormData(formData);
 
-                    const $id_data = $("#ProjectFormPupUpModal #project_id").val();
-                    const $method = $id_data ? "PUT" : "POST";
-                    const $url = $id_data ? `${$base_url}/api/projects/${$id_data}` : `${$base_url}/api/projects`;
+                    const $id_data = $("#project_id").val();
+                    console.log($("#project_id").length);
+                    console.log($("#project_id"));
                     console.log($id_data);
+                    const $url = $id_data ? `${$base_url}/api/projects/${$id_data}` : `${$base_url}/api/projects`;
+
+                    if ($id_data) {
+                        formData.append('_method', 'PUT');
+                    }
 
                     $.ajax({
                         url: `${$url}`,
-                        type: $method,
-                        data: formDatas,
+                        type: "POST",
+                        data: formData,
                         processData: false,
                         contentType: false,
                         xhrFields: {
@@ -473,7 +467,7 @@
                             $(".hideBtnProcess").show();
 
                             if ($.fn.DataTable.isDataTable(`#projectTable`)) {
-                                $(`#projectTable`).DataTable().ajax.reload();
+                                $('#projectTable').DataTable().ajax.reload(null, false);
                             }
                         },
                         error: function(callback) {
@@ -532,11 +526,22 @@
                     }
                 }
             });
+
+            $("#project_id").val(data.id);
         }
 
         async function popUpModalExecAction($action, $id = null) {
             if ($action == "close") {
-                $("#projectPopUp").addClass("hidden");
+                if ($.fn.DataTable.isDataTable(`#projectTable`)) {
+                    $('#projectTable').DataTable().ajax.reload(null, false);
+                }
+
+                $("#projectPopUp").hide();
+            }
+            if ($action == "add") {
+                $("#project_id").val("");
+
+                $("#projectPopUp").show();
             }
             if ($action == "edit") {
                 $.ajax({
@@ -560,7 +565,7 @@
                         $("#loadingAjax").hide();
                         $(".hideBtnProcess").show();
 
-                        $("#projectPopUp").removeClass("hidden");
+                        $("#projectPopUp").show();
                     },
                     error: function(callback) {
                         const { responseJSON } = callback;
@@ -592,7 +597,7 @@
             if ($action == "delete") {
                 Swal.fire({
                     title: "Apakah yakin ingin menghapus data?",
-                    icon: "danger",
+                    icon: "question",
                     showCancelButton: true,
                     confirmButtonColor: "#3085d6",
                     cancelButtonColor: "#d33",
@@ -626,7 +631,7 @@
                                 $(".hideBtnProcess").show();
 
                                 if ($.fn.DataTable.isDataTable(`#projectTable`)) {
-                                    $(`#projectTable`).DataTable().ajax.reload();
+                                    $('#projectTable').DataTable().ajax.reload(null, false);
                                 }
                             },
                             error: function(callback) {
