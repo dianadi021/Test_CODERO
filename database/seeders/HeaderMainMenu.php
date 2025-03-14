@@ -24,7 +24,7 @@ class HeaderMainMenu extends Seeder
                 'name' => 'Project',
                 'route_name' => 'master-data.project',
                 'link' => '/master-data/project',
-                'icon' => 'assets/images/icons/12087772.png',
+                'icon' => 'assets/images/icons/main-menu/12087772.png',
                 'id_parent' => $lastID,
             ],
         ];

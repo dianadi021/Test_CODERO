@@ -79,6 +79,9 @@ php artisan migrate:fresh --seed
 ```bash
 php artisan config:publish cors
 ```
+```bash
+php artisan storage:link
+```
 
 > TailwindCSS
 - Pastikan sudah installasi `pnpm`, jika belum install bisa ikuti berikut
@@ -107,6 +110,12 @@ pnpm dev
 > TailwindCSS
 ```bash
 pnpm build
+```
+
+# Default User Login
+```bash
+Username: root
+Password: 1234
 ```
 
 ## Docker

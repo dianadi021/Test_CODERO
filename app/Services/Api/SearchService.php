@@ -97,25 +97,6 @@ class SearchService
                 return $datas;
                 break;
 
-            case 'list_pasien_lama':
-                $wheres = ($this->IsValidVal($req->id_pasien) ? " WHERE pas.id = $req->id_pasien AND " : " WHERE ");
-                $wheres .= ($this->IsValidVal($req->q) ? " LOWER(pas.fullname) LIKE LOWER('%$req->q%') " : " 1=1 ");
-
-                $qry = "SELECT pas.id AS id_pasien, pas.id AS norm, ppas.nik, ppas.fullname, ppas.handphone, ppas.whatsapp, ppas.telegram, ppas.birthdate, ppas.address, gndr.id AS id_gender, gndr.name AS jenis_kelamin, goldar.id AS id_goldar, goldar.name AS goldar, ppas.id_provinsi, prov.name AS provinsi, ppas.id_kabupaten, kab.name AS kabupaten, ppas.id_kecamatan, kec.name AS kecamatan, ppas.id_kelurahan, kel.name AS kelurahan FROM pasien pas LEFT JOIN penduduk ppas ON ppas.id = pas.id_penduduk LEFT JOIN gender gndr ON gndr.id = ppas.id_gender LEFT JOIN golongan_darah goldar ON goldar.id = ppas.id_golongan_darah LEFT JOIN provinsi prov ON prov.id = ppas.id_provinsi LEFT JOIN kabupaten kab ON kab.id = ppas.id_kabupaten LEFT JOIN kecamatan kec ON kec.id = ppas.id_kecamatan LEFT JOIN kelurahan kel ON kel.id = ppas.id_kelurahan $wheres ";
-                $datas = DB::select("$qry");
-                $datas = json_decode(json_encode($datas), true);
-
-                for ($i = 0; $i < count($datas); $i++) {
-                    $datas[$i]["norm"] = $this->ReformatNoRM($datas[$i]["norm"]);
-                }
-
-                for ($i = 0; $i < count($datas); $i++) {
-                    $datas[$i]["birthdate"] = $this->ReformatDateTime($datas[$i]["birthdate"]);
-                }
-
-                return $datas;
-                break;
-
             default:
                 return [];
                 break;

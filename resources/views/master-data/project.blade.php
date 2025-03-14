@@ -1,7 +1,7 @@
 <x-dynamic-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Wilayah') }}
+            {{ __('Project') }}
         </h2>
     </x-slot>
 
@@ -19,7 +19,7 @@
                                     <table class="w-full table-no-border">
                                         <tr class="align-baseline">
                                             <td>
-                                                <label for="id_provinsi" class="block text-sm font-medium text-gray-700 mb-2">
+                                                <label class="block text-sm font-medium text-gray-700 mb-2">
                                                     Cari Berdasarkan
                                                 </label>
                                             </td>
@@ -27,47 +27,22 @@
                                             <td>
                                                 <select name="params_type" class="w-full px-4 py-2 border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 rounded-md shadow-sm bg-white text-gray-700 hover:bg-gray-100 transition-all duration-200">
                                                     <option value="" selected disabled>Pilih Opsi...</option>
-                                                    <option value="provinsi">Provinsi</option>
-                                                    <option value="kabupaten">Kabupaten</option>
-                                                    <option value="kecamatan">Kecamatan</option>
-                                                    <option value="kelurahan">Kelurahan</option>
+                                                    <option value="nama_project">Project</option>
+                                                    <option value="nama_karyawan">Karyawan</option>
+                                                    <option value="tanggal_project">Tanggal</option>
                                                 </select>
+                                            </td>
                                         </tr>
-                                        <tr class="align-baseline">
+                                        <tr>
                                             <td>
-                                                <label for="id_provinsi" class="block text-sm font-medium text-gray-700 mb-2">
-                                                    Provinsi
+                                                <label for="id_provinsi" class="block text-sm font-medium text-gray-700 mb-2"></label>
+                                                    Kata Kunci
                                                 </label>
                                             </td>
                                             <td>:</td>
-                                            <td><x-autocomplete-layout section="ssr-dropdown" get="provinsi" class="check_form_search" placeholder="Pilih provinsi..." /></td>
-                                        </tr>
-                                        <tr class="align-baseline">
                                             <td>
-                                                <label for="id_kabupaten" class="block text-sm font-medium text-gray-700 mb-2">
-                                                    Kabupaten
-                                                </label>
+                                                <div></div>
                                             </td>
-                                            <td>:</td>
-                                            <td><x-autocomplete-layout section="ssr-dropdown" get="kabupaten" class="check_form_search" placeholder="Pilih kabupaten..." onclick="DropdownGetLoad('kabupaten', 'provinsi', 'wilayah', '#searchForm')" /></td>
-                                        </tr>
-                                        <tr class="align-baseline">
-                                            <td>
-                                                <label for="id_kecamatan" class="block text-sm font-medium text-gray-700 mb-2">
-                                                    Kecamatan
-                                                </label>
-                                            </td>
-                                            <td>:</td>
-                                            <td><x-autocomplete-layout section="ssr-dropdown" get="kecamatan" class="check_form_search" placeholder="Pilih kecamatan..." onclick="DropdownGetLoad('kecamatan', 'kabupaten', 'wilayah', '#searchForm')" /></td>
-                                        </tr>
-                                        <tr class="align-baseline">
-                                            <td>
-                                                <label for="id_kelurahan" class="block text-sm font-medium text-gray-700 mb-2">
-                                                    Kelurahan
-                                                </label>
-                                            </td>
-                                            <td>:</td>
-                                            <td><x-autocomplete-layout section="ssr-dropdown" get="kelurahan" class="check_form_search" placeholder="Pilih kelurahan..." onclick="DropdownGetLoad('kelurahan', 'kecamatan', 'wilayah', '#searchForm')" /></td>
                                         </tr>
                                     </table>
 
@@ -84,75 +59,28 @@
                     </fieldset>
                 </div>
 
-                <div id="wilayah_container" x-cloak x-data="{ wilayahModal: false }" @click.outside="wilayahModal = false" @close.stop="wilayahModal = false"></div>
+                <div id="Project_container" x-cloak x-data="{ ProjectModal: false }" @click.outside="ProjectModal = false" @close.stop="ProjectModal = false"></div>
 
                 <div class="mt-6 overflow-x-auto">
                     <div class="tabs">
                         <div class="flex border-b">
-                            <button id="header-provinsi" class="tab-header px-4 py-2 text-lg font-medium focus:outline-none bg-gray-100" data-tab-target="provinsi">
-                                Provinsi
-                            </button>
-                            <button id="header-kabupaten" class="tab-header px-4 py-2 text-lg font-medium focus:outline-none" data-tab-target="kabupaten">
-                                Kabupaten
-                            </button>
-                            <button id="header-kecamatan" class="tab-header px-4 py-2 text-lg font-medium focus:outline-none" data-tab-target="kecamatan">
-                                Kecamatan
-                            </button>
-                            <button id="header-kelurahan" class="tab-header px-4 py-2 text-lg font-medium focus:outline-none" data-tab-target="kelurahan">
-                                Kelurahan
+                            <button id="header-project" class="tab-header px-4 py-2 text-lg font-medium focus:outline-none bg-gray-100" data-tab-target="project">
+                                Project
                             </button>
                         </div>
 
                         <!-- Tab Contents -->
-                        <div id="tab_provinsi" class="tab-content px-4 py-2 text-gray-700">
-                            <table id="provinsiTable" class="cek_datatables_content min-w-full table-auto table-text-center-number">
+                        <div id="tab_project" class="tab-content px-4 py-2 text-gray-700">
+                            <table id="projectTable" class="cek_datatables_content min-w-full table-auto table-text-center-number">
                                 <thead>
                                     <tr class="bg-gray-100">
                                         <th class="px-4 py-2">{{ __('No') }}</th>
-                                        <th class="px-4 py-2">{{ __('Nama') }}</th>
-                                        <th class="px-4 py-2">{{ __('Aksi') }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                        </div>
-                        <div id="tab_kabupaten" class="tab-content hidden px-4 py-2 text-gray-700">
-                            <table id="kabupatenTable" class="cek_datatables_content min-w-full table-auto table-text-center-number">
-                                <thead>
-                                    <tr class="bg-gray-100">
-                                        <th class="px-4 py-2">{{ __('No') }}</th>
-                                        <th class="px-4 py-2">{{ __('Nama') }}</th>
-                                        <th class="px-4 py-2">{{ __('Provinsi') }}</th>
-                                        <th class="px-4 py-2">{{ __('Aksi') }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                        </div>
-                        <div id="tab_kecamatan" class="tab-content hidden px-4 py-2 text-gray-700">
-                            <table id="kecamatanTable" class="cek_datatables_content min-w-full table-auto table-text-center-number">
-                                <thead>
-                                    <tr class="bg-gray-100">
-                                        <th class="px-4 py-2">{{ __('No') }}</th>
-                                        <th class="px-4 py-2">{{ __('Nama') }}</th>
-                                        <th class="px-4 py-2">{{ __('Kabupaten') }}</th>
-                                        <th class="px-4 py-2">{{ __('Provinsi') }}</th>
-                                        <th class="px-4 py-2">{{ __('Aksi') }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                        </div>
-                        <div id="tab_kelurahan" class="tab-content hidden px-4 py-2 text-gray-700">
-                            <table id="kelurahanTable" class="cek_datatables_content min-w-full table-auto table-text-center-number">
-                                <thead>
-                                    <tr class="bg-gray-100">
-                                        <th class="px-4 py-2">{{ __('No') }}</th>
-                                        <th class="px-4 py-2 text-nowrap">{{ __('Kode Pos') }}</th>
-                                        <th class="px-4 py-2">{{ __('Nama') }}</th>
-                                        <th class="px-4 py-2">{{ __('Kecamatan') }}</th>
-                                        <th class="px-4 py-2">{{ __('Kabupaten') }}</th>
-                                        <th class="px-4 py-2">{{ __('Provinsi') }}</th>
+                                        <th class="px-4 py-2">{{ __('Project Name') }}</th>
+                                        <th class="px-4 py-2">{{ __('Client') }}</th>
+                                        <th class="px-4 py-2">{{ __('Project Leader') }}</th>
+                                        <th class="px-4 py-2">{{ __('Start') }}</th>
+                                        <th class="px-4 py-2">{{ __('End') }}</th>
+                                        <th class="px-4 py-2">{{ __('Progress') }}</th>
                                         <th class="px-4 py-2">{{ __('Aksi') }}</th>
                                     </tr>
                                 </thead>
@@ -170,11 +98,94 @@
             (async function() {
                 const $modalSlotContent = `
                 <div class="mt-4">
-                    <label for="nama">Nama *</label>
-                    <input type="text" id="nama" name="nama" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required />
+                    <form id="ProjectForm" onsubmit="simpanProject()">
+                        <table class="table-no-border">
+                            <tr class="align-baseline">
+                                <td>
+                                    <label for="project_name" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Nama Project
+                                    </label>
+                                </td>
+                                <td>:</td>
+                                <td>
+                                    <input type="text" id="project_name" name="project_name" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required />
+                                </td>
+                            </tr>
+                            <tr class="align-baseline">
+                                <td>
+                                    <label for="project_lead" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Leader Photo
+                                    </label>
+                                </td>
+                                <td>:</td>
+                                <td>
+                                    <input type="file" id="leader_photo" name="leader_photo" class="w-full p-2 border rounded-md" accept="image/*">
+                                </td>
+                            </tr>
+                            <tr class="align-baseline">
+                                <td>
+                                    <label for="project_lead" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Project Leader
+                                    </label>
+                                </td>
+                                <td>:</td>
+                                <td>
+                                    <input type="text" id="project_lead" name="project_lead" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm text-capitalize-input" required />
+                                </td>
+                            </tr>
+                            <tr class="align-baseline">
+                                <td>
+                                    <label for="client_name" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Client
+                                    </label>
+                                </td>
+                                <td>:</td>
+                                <td>
+                                    <input type="text" id="client_name" name="client_name" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required />
+                                </td>
+                            </tr>
+                            <tr class="align-baseline">
+                                <td>
+                                    <label for="project_progress" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Project Progress
+                                    </label>
+                                </td>
+                                <td>:</td>
+                                <td>
+                                    <div class="flex items-baseline" x-data="{ val_project_progress: 50 }">
+                                        <input id="project_progress" name="project_progress" type="range" id="slider" x-model="val_project_progress" min="0" max="100" class="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer accent-blue-600" required />
+                                        <div class="text-center font-semibold text-blue-600"><span x-text="val_project_progress"></span>%</div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="align-baseline">
+                                <td>
+                                    <label for="start_date" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Start
+                                    </label>
+                                </td>
+                                <td>:</td>
+                                <td>
+                                    <input type="text" id="start_date" name="start_date" class="datepicker border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm cursor-pointer" required readonly />
+                                </td>
+                            </tr>
+                            <tr class="align-baseline">
+                                <td>
+                                    <label for="end_date" class="block text-sm font-medium text-gray-700 mb-2">
+                                        End
+                                    </label>
+                                </td>
+                                <td>:</td>
+                                <td>
+                                    <input type="text" id="end_date" name="end_date" class="datepicker border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm cursor-pointer" required readonly />
+                                </td>
+                            </tr>
+                        </table>
+                        <button id="btnReset" type="reset" class="hidden"></button>
+                    </form>
                 </div>
                 `;
-                await CreatePopUpModal("#wilayah_container", "wilayahModal", "wilayahForm", "simpanWilayah()", $modalSlotContent, ["Tambah Data", "Simpan", "Reset", "Tutup"], ["Form Tambah Data", "Wilayah"], null, { btn: true });
+                await CreatePopUpModal("#Project_container", "ProjectModal", "ProjectForm", "simpanProject()", $modalSlotContent, ["Tambah Data", "Simpan", "Reset", "Tutup"], ["Form Tambah Data"], null, { btn: true });
             })();
 
             // Functions event onclick start
@@ -191,20 +202,35 @@
 
                 await ContentLoaderDataTable(`/api/search?get_data=${$target}`, `#${$target}Table`, $coloumnsArray);
             });
+
+            $(".datepicker").datetimepicker({
+                timepicker: false,
+                format: 'd-m-Y',
+                scrollMonth: false,
+                scrollInput: false
+            });
+
+            $(".datepicker").on("change", function () {
+                let startDate = moment($("#start_date").val(), "DD-MM-YYYY", true);
+                let endDate = moment($("#end_date").val(), "DD-MM-YYYY", true);
+
+                if (!startDate.isValid() || !endDate.isValid()) {
+                    return;
+                }
+
+                if (endDate.isBefore(startDate)) {
+                    AllNotify("Tanggal akhir harus lebih besar dari tanggal awal!", "error");
+                    $("#end_date").val("");
+                }
+            });
             // Functions event onclick end
         });
 
         function tableFormat($target) {
             const $coloumnsArray = [{ data: null, render: (data, type, row, meta) => meta.row + 1 }];
 
-            if ($target == 'provinsi') {
-                $coloumnsArray.push({ data: 'name' });
-            } else if ($target == 'kabupaten') {
-                $coloumnsArray.push({ data: 'name' }, { data: 'provinsi' });
-            } else if ($target == 'kecamatan') {
-                $coloumnsArray.push({ data: 'name' }, { data: 'kabupaten' }, { data: 'provinsi' });
-            } else if ($target == 'kelurahan') {
-                $coloumnsArray.push({ data: 'postal_code' }, { data: 'name' }, { data: 'kecamatan' }, { data: 'kabupaten' }, { data: 'provinsi' });
+            if ($target == 'project') {
+                $coloumnsArray.push({ data: 'project_name' }, { data: 'client_name' }, { data: 'project_lead' }, { data: 'project_progress' }, { data: 'start_date' }, { data: 'end_date' });
             }
 
             $coloumnsArray.push({
