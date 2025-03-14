@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\SearchController;
+use App\Http\Controllers\Api\ProjectController;
 
 Route::middleware(['api'])->group(function () {
     Route::get('/search', [SearchController::class, 'index']);
@@ -17,4 +18,10 @@ Route::middleware(['api'])->group(function () {
     Route::get('/users/{id}', [UserController::class, 'show']);
     Route::put('/users/{id}', [UserController::class, 'edit']);
     Route::delete('/users/{id}', [UserController::class, 'destroy']);
+
+    Route::post('/projects', [ProjectController::class, 'store']);
+    Route::get('/projects', [ProjectController::class, 'index']);
+    Route::get('/projects/{id}', [ProjectController::class, 'show']);
+    Route::put('/projects/{id}', [ProjectController::class, 'edit']);
+    Route::delete('/projects/{id}', [ProjectController::class, 'destroy']);
 });

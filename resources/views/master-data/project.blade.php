@@ -35,7 +35,7 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <label for="id_provinsi" class="block text-sm font-medium text-gray-700 mb-2"></label>
+                                                <label class="block text-sm font-medium text-gray-700 mb-2"></label>
                                                     Kata Kunci
                                                 </label>
                                             </td>
@@ -98,7 +98,7 @@
             (async function() {
                 const $modalSlotContent = `
                 <div class="mt-4">
-                    <form id="ProjectForm" onsubmit="simpanProject()">
+                    <form id="ProjectForm" onsubmit="simpanProject(this)" enctype="multipart/form-data">
                         <table class="table-no-border">
                             <tr class="align-baseline">
                                 <td>
@@ -182,10 +182,11 @@
                             </tr>
                         </table>
                         <button id="btnReset" type="reset" class="hidden"></button>
+                        <button id="btnSubmit" type="submit" class="hidden"></button>
                     </form>
                 </div>
                 `;
-                await CreatePopUpModal("#Project_container", "ProjectModal", "ProjectForm", "simpanProject()", $modalSlotContent, ["Tambah Data", "Simpan", "Reset", "Tutup"], ["Form Tambah Data"], null, { btn: true });
+                await CreatePopUpModal("#Project_container", "ProjectModal", "ProjectForm", ["execFormProject('submit')", "execFormProject('reset')"], $modalSlotContent, ["Tambah Data", "Simpan", "Reset", "Tutup"], ["Form Tambah Data"], null, { btn: true });
             })();
 
             // Functions event onclick start
@@ -223,6 +224,8 @@
                     $("#end_date").val("");
                 }
             });
+
+            execFormProject();
             // Functions event onclick end
         });
 
@@ -297,6 +300,87 @@
 
                 $(`#${$getData}Table`).show();
                 await ContentLoaderDataTable(`/api/search?get_data=${$getData}&${$params}`, `#${$getData}Table`, $coloumnsArray);
+            }
+        }
+
+        async function simpanProject() {
+            event.preventDefault();
+
+            Swal.fire({
+                title: "Apakah yakin ingin melanjutkan?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                cancelButtonText: "Batal",
+                confirmButtonText: "Lanjutkan"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $(".csrf-token").val($('meta[name="csrf-token"]').attr('content'));
+
+                    $("#loadingAjax").show();
+                    $(".hideBtnProcess").hide();
+                    toastr.warning("Sedang diproses, mohon tunggu!", "Peringatan!");
+
+                    let formElement = document.getElementById("ProjectForm");
+                    let formDatas = new FormData(formElement);
+
+                    $.ajax({
+                        url: `${$base_url}/api/projects`,
+                        type: "POST",
+                        data: formDatas,
+                        processData: false,
+                        contentType: false,
+                        xhrFields: {
+                            withCredentials: true
+                        },
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(callback) {
+                            const { message } = callback;
+                            console.dir('success', callback);
+                            toastr.success(message, "Success!");
+
+                            $("#loadingAjax").hide();
+                            $(".hideBtnProcess").show();
+                        },
+                        error: function(callback) {
+                            const { responseJSON } = callback;
+                            const { errors, message, messages, datas } = responseJSON;
+                            let errorInfo, validator;
+                            if (datas) {
+                                const { errorInfo: errInfo, validator: validCallback } = datas
+                                errorInfo = errInfo;
+                                validator = validCallback;
+                            }
+                            console.dir('error', callback);
+
+                            const $tmpErrLoop = datas || errors;
+                            if ($tmpErrLoop) {
+                                for (let key in $tmpErrLoop) {
+                                    AllNotify($tmpErrLoop[key][0], "error");
+                                    $(`#err_${key}`).show();
+                                }
+                            } else if (message || messages || errorInfo || validator) {
+                                const $txtMsgAlert = (validator ? "input data tidak sesuai atau tidak boleh kosong" : ( errorInfo ? errorInfo[2] : (messages ? messages : message)));
+                                AllNotify($txtMsgAlert, "error");
+                            }
+
+                            $("#loadingAjax").hide();
+                            $(".hideBtnProcess").show();
+                        },
+                    });
+                }
+            });
+        }
+
+        function execFormProject($exec) {
+            if ($exec == "submit") {
+                $("#btnSubmit").click();
+            }
+            if ($exec == "reset") {
+                $("#btnReset").click();
             }
         }
         // Functions event onclick end

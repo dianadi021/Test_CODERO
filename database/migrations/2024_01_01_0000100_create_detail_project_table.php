@@ -16,12 +16,13 @@ return new class extends Migration
             $table->string('project_name');
             $table->string('project_lead');
             $table->string('client_name');
-            $table->string('path_photo');
+            $table->string('leader_photo')->nullable();
             $table->integer('project_progress');
-            $table->timestamp('start_date');
-            $table->timestamp('end_date');
-            $table->integer('is_active')->default(1)->comment("0 Tidak, 1 Ya");
-            $table->integer('is_deleted')->default(0)->comment("0 Tidak, 1 Ya");$table->softDeletes();
+            $table->timestamp('start_date')->nullable();
+            $table->timestamp('end_date')->nullable();
+            $table->integer('is_active')->default(1)->comment("0 Tidak, 1 Ya")->nullable();
+            $table->integer('is_deleted')->default(0)->comment("0 Tidak, 1 Ya")->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
